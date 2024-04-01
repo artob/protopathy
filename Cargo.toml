@@ -1,0 +1,26 @@
+# See: https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace]
+members = ["lib/*"]
+default-members = ["lib/protopathy"]
+resolver = "2"
+
+[workspace.package]
+version = "0.0.0"
+authors = ["Arto Bendiken"]
+edition = "2021"
+rust-version = "1.70"
+description = "Protopathy"
+documentation = "https://github.com/artob/protopathy/blob/master/README.md"
+readme = true
+homepage = "https://github.com/artob/protopathy"
+repository = "https://github.com/artob/protopathy"
+license = "Unlicense"
+license-file = "UNLICENSE"
+keywords = []
+categories = []
+publish = true
+
+[workspace.dependencies]
+prost = "0.12"
+protopathy = { path = "lib/protopathy" }
