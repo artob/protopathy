@@ -28,12 +28,16 @@ impl Server {
             "tcp" => self.start_tcp_socket(),
             #[cfg(unix)]
             "file" => self.start_file_socket(),
+            #[cfg(unix)]
+            "fd" => self.start_fd_socket(),
             _ => panic!("unsupported scheme in socket URL"), // FIXME
         }
     }
 
     #[cfg(feature = "tcp")]
     #[tokio::main]
+    /// Binds to a TCP socket using an IPv4/IPv6 address and port
+    /// number (e.g., "tcp://[::1]:50051").
     async fn start_tcp_socket(&self) -> Result<(), Box<dyn std::error::Error>> {
         use std::net::SocketAddr;
 
@@ -56,6 +60,8 @@ impl Server {
 
     #[cfg(unix)]
     #[tokio::main]
+    /// Binds to a Unix domain socket using a local file path
+    /// (e.g., "file:/run/myserver.sock").
     async fn start_file_socket(&self) -> Result<(), Box<dyn std::error::Error>> {
         use tokio::net::UnixListener;
         use tokio_stream::wrappers::UnixListenerStream;
@@ -65,14 +71,43 @@ impl Server {
         std::fs::create_dir_all(&socket_path.parent().unwrap())?;
         std::fs::remove_file(&socket_path).ok();
 
-        let uds = UnixListener::bind(socket_path)?;
-        let uds_stream = UnixListenerStream::new(uds);
+        let listener = UnixListener::bind(socket_path)?;
+        let listener_stream = UnixListenerStream::new(listener);
 
         let routes = self.routes.clone();
 
         tonic::transport::Server::builder()
             .add_routes(routes.routes())
-            .serve_with_incoming_shutdown(uds_stream, self.stop_listener.clone())
+            .serve_with_incoming_shutdown(listener_stream, self.stop_listener.clone())
+            .await?;
+
+        Ok(())
+    }
+
+    #[cfg(unix)]
+    #[tokio::main]
+    /// Binds to a byte stream socket using a process-specific file
+    /// descriptor (e.g., "fd:3").
+    async fn start_fd_socket(&self) -> Result<(), Box<dyn std::error::Error>> {
+        use std::os::fd::{FromRawFd, RawFd};
+        use tokio::net::UnixListener;
+        use tokio_stream::wrappers::UnixListenerStream;
+
+        let socket_fd: RawFd = self
+            .socket_url
+            .path()
+            .parse()
+            .expect("file descriptor in socket URL");
+
+        let listener = unsafe { std::os::unix::net::UnixListener::from_raw_fd(socket_fd) };
+        let listener = UnixListener::from_std(listener)?;
+        let listener_stream = UnixListenerStream::new(listener);
+
+        let routes = self.routes.clone();
+
+        tonic::transport::Server::builder()
+            .add_routes(routes.routes())
+            .serve_with_incoming_shutdown(listener_stream, self.stop_listener.clone())
             .await?;
 
         Ok(())
