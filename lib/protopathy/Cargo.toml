@@ -15,8 +15,16 @@ categories = ["command-line-interface", "network-programming"]
 publish.workspace = true
 
 [features]
-default = ["tracing"]
+default = ["tcp", "tracing"]
+tcp = []
 tracing = ["dep:tracing"]
 
 [dependencies]
+tokio = { version = "1.37", features = ["full"] }
+tokio-stream = { version = "0.1", features = ["net"] }
+tonic = "0.11"
 tracing = { version = "0.1", optional = true }
+triggered = "0.1"
+url = "2.5"
+
+[target.'cfg(unix)'.dependencies]
