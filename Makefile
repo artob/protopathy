@@ -1,10 +1,15 @@
 CARGO = cargo
 
-all:
+all: Cargo.toml
+	$(CARGO) build
 
-check:
+check: Cargo.toml
+	$(CARGO) test
 
-clean:
-	rm -rf target
+clean: Cargo.toml
+	@rm -rf *~ target
+	$(CARGO) clean
 
 .PHONY: all check clean
+.SECONDARY:
+.SUFFIXES:

@@ -5,7 +5,7 @@ authors.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 description.workspace = true
-documentation.workspace = true
+#documentation.workspace = true
 readme.workspace = true
 homepage.workspace = true
 repository.workspace = true
@@ -15,7 +15,8 @@ categories = ["command-line-interface", "network-programming"]
 publish.workspace = true
 
 [features]
-default = ["tcp", "tracing"]
+default = ["std", "tcp", "tracing"]
+std = []
 tcp = []
 tracing = ["dep:tracing"]
 

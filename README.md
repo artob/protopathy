@@ -1,7 +1,7 @@
 # Protopathy
 
 [![License](https://img.shields.io/badge/license-Public%20Domain-blue.svg)](https://unlicense.org)
-[![Compatibility](https://img.shields.io/badge/rust-1.70%2B-blue)](https://crates.io/crates/protopathy)
+[![Compatibility](https://img.shields.io/badge/rust-1.70%2B-blue)](https://rust-lang.org)
 [![Package](https://img.shields.io/crates/v/protopathy)](https://crates.io/crates/protopathy)
 
 🚧 _This is presently under heavy construction._

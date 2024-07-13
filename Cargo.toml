@@ -11,16 +11,15 @@ authors = ["Arto Bendiken"]
 edition = "2021"
 rust-version = "1.70"
 description = "Protopathy"
-documentation = "https://github.com/artob/protopathy/blob/master/README.md"
+#documentation = "https://github.com/artob/protopathy/blob/master/README.md"
 readme = true
-homepage = "https://github.com/artob/protopathy"
+homepage = "https://protopathy.rs"
 repository = "https://github.com/artob/protopathy"
 license = "Unlicense"
-license-file = "UNLICENSE"
-keywords = []
-categories = []
+keywords = ["protobuf", "rpc"]
+categories = ["network-programming"]
 publish = true
 
 [workspace.dependencies]
-prost = "0.12"
+prost = "0.13"
 protopathy = { path = "lib/protopathy" }

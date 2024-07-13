@@ -3,9 +3,10 @@
 pub mod prelude;
 
 //mod error;
-mod feature;
-mod server;
-
 //pub use error::*;
+
+mod feature;
 pub use feature::*;
+
+mod server;
 pub use server::*;
